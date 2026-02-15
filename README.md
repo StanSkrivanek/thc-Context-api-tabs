@@ -203,4 +203,4 @@ This is a demo project, but feel free to fork and customize for your needs!
 
 ---
 
-**Built with** ❤️ **using Svelte 5 and SvelteKit **
+**Built with** ❤️ **using Svelte 5 and SvelteKit**
