@@ -17,8 +17,8 @@
 
 	/**
 	 * Handles keyboard navigation within the tab list.
-	 * Arrow keys move focus between tabs.
-	 * Home/End jump to first/last tab.
+	 * Supports both horizontal (Left/Right) and vertical (Up/Down) navigation
+	 * since the layout can change responsively via CSS container queries.
 	 */
 	function handleKeyDown(event: KeyboardEvent) {
 		const currentIndex = tabs.tabIds.indexOf(tabs.activeTabId);
@@ -26,18 +26,15 @@
 
 		let newIndex: number | null = null;
 
-		// Determine which keys to use based on orientation
-		const isHorizontal = tabs.orientation === 'horizontal';
-		const prevKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp';
-		const nextKey = isHorizontal ? 'ArrowRight' : 'ArrowDown';
-
 		switch (event.key) {
-			case prevKey:
+			case 'ArrowLeft':
+			case 'ArrowUp':
 				// Move to previous tab, wrap to end
 				newIndex = currentIndex > 0 ? currentIndex - 1 : tabs.tabIds.length - 1;
 				break;
 
-			case nextKey:
+			case 'ArrowRight':
+			case 'ArrowDown':
 				// Move to next tab, wrap to start
 				newIndex = currentIndex < tabs.tabIds.length - 1 ? currentIndex + 1 : 0;
 				break;
@@ -79,13 +76,28 @@
 <style>
 	.tab-list {
 		display: inline-flex;
+		flex-direction: row;
+		flex-wrap: wrap;
 		gap: 0.25rem;
 		padding: 0.25rem;
 		background: var(--color-muted);
 		border-radius: var(--radius-md);
+		border: 1px solid var(--color-border);
+		width: fit-content;
 	}
 
+	/* Under 500px: stack tabs vertically (side-by-side layout with panel) */
+	@container (max-width: 500px) {
+		.tab-list {
+			flex-direction: column;
+			width: auto;
+			flex-shrink: 0;
+		}
+	}
+
+	/* Explicit vertical orientation from parent */
 	:global([data-orientation='vertical']) .tab-list {
 		flex-direction: column;
+		width: 100%;
 	}
 </style>

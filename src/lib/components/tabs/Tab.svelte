@@ -131,4 +131,12 @@
 		width: 100%;
 		justify-content: flex-start;
 	}
+
+	/* Under 500px: tabs stack vertically in the side layout */
+	@container (max-width: 500px) {
+		.tab {
+			width: 100%;
+			justify-content: flex-start;
+		}
+	}
 </style>

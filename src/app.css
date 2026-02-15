@@ -6,10 +6,121 @@
 	font-display: swap;
 }
 
+:root {
+	/* Typography */
+	--font-regular: 'regular', sans-serif;
+	--font-size-fluid-1: clamp(1rem, 1vw + 0.5rem, 1.25rem);
+
+	/* Backward compatibility */
+	--bg: #ffffff;
+	--text: #111111;
+	--link: #1a0dab;
+	--link-hover: #551a8b;
+
+	/* Base colors (light mode) */
+	--color-background: #ffffff;
+	--color-foreground: #020817;
+
+	/* Muted backgrounds */
+	--color-muted: #f1f5f9;
+	--color-muted-foreground: #64748b;
+
+	/* Card/Surface */
+	--color-card: #ffffff;
+	--color-card-foreground: #020817;
+
+	/* Popover */
+	--color-popover: #ffffff;
+	--color-popover-foreground: #020817;
+
+	/* Primary brand color */
+	--color-primary: #0f172a;
+	--color-primary-foreground: #f8fafc;
+
+	/* Secondary */
+	--color-secondary: #f1f5f9;
+	--color-secondary-foreground: #0f172a;
+
+	/* Accent */
+	--color-accent: #f1f5f9;
+	--color-accent-foreground: #0f172a;
+
+	/* Destructive */
+	--color-destructive: #ef4444;
+	--color-destructive-foreground: #fef2f2;
+
+	/* Borders */
+	--color-border: #e2e8f0;
+	--color-input: #e2e8f0;
+
+	/* Ring (focus) */
+	--color-ring: #94a3b8;
+
+	/* Status colors */
+	--color-success: #22c55e;
+	--color-success-foreground: #ffffff;
+	--color-warning: #f59e0b;
+	--color-warning-foreground: #ffffff;
+	--color-error: #ef4444;
+	--color-error-foreground: #ffffff;
+	--color-info: #3b82f6;
+	--color-info-foreground: #ffffff;
+
+	/* Shadows (ShadCN style) */
+	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+	--shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+	/* Border radius */
+	--radius: 0.5rem;
+	--radius-sm: 0.375rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.75rem;
+	--radius-xl: 1rem;
+
+	/* Legacy compatibility */
+	--color-surface: var(--color-muted);
+	--color-surface-hover: #e2e8f0;
+	--color-foreground-muted: var(--color-muted-foreground);
+	--color-foreground-subtle: #94a3b8;
+	--color-primary-hover: #1e293b;
+	--color-border-focus: var(--color-ring);
+	--color-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Base styles */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
 body {
 	margin: 0;
-	padding: 0;
-	font-family: 'regular', Arial, sans-serif;
-	background-color: #f5f5f5;
-	color: #333;
+	min-height: 100vh;
+	background-color: var(--color-background);
+	color: var(--color-foreground);
+	font-family: var(--font-regular), var(--font-system-ui);
+	font-size: var(--font-size-fluid-1);
+	line-height: 1.6;
+	accent-color: var(--color-primary);
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+/* Focus ring utility */
+.focus-ring:focus-visible {
+	outline: 2px solid var(--color-ring);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
 }

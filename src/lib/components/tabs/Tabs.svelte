@@ -41,17 +41,29 @@
 	});
 </script>
 
-<div class="tabs tabs-{orientation} {className}" data-orientation={orientation}>
+<div class="tabs {className}" data-orientation={orientation}>
 	{@render children()}
 </div>
 
 <style>
 	.tabs {
+		container-type: inline-size;
 		display: flex;
 		flex-direction: column;
+		gap: 1rem;
 	}
 
-	.tabs-vertical {
+	/* Under 500px: tab list and panels side by side */
+	@container (max-width: 500px) {
+		.tabs {
+			flex-direction: row;
+			align-items: flex-start;
+		}
+	}
+
+	/* Explicit vertical orientation always uses row layout */
+	.tabs[data-orientation='vertical'] {
 		flex-direction: row;
+		align-items: flex-start;
 	}
 </style>

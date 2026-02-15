@@ -37,11 +37,20 @@
 <style>
 	.tab-panel {
 		padding: 1.5rem 0;
+		flex: 1;
+		min-width: 0;
 	}
 
 	.tab-panel:focus-visible {
 		outline: 2px solid var(--color-primary, #3b82f6);
 		outline-offset: 2px;
 		border-radius: 4px;
+	}
+
+	/* Under 500px: panel takes remaining space in side layout */
+	@container (max-width: 500px) {
+		.tab-panel {
+			padding: 0 1rem;
+		}
 	}
 </style>

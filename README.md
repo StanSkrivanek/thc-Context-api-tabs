@@ -1,42 +1,193 @@
-# sv
+# Svelte 5 Tabs Component
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A modern, accessible tabs component built with **Svelte 5's Context API** and reactive primitives (`$state`, `$derived`, `$effect`).
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Svelte 5 Context API** - Uses `setContext`/`getContext` with Symbol keys for collision-free context sharing
+- **Reactive State** - Built with `$state` and `$derived` runes for fine-grained reactivity
+- **Fully Accessible** - Complete ARIA attributes, keyboard navigation (arrow keys, Home/End), and screen reader support
+- **Compound Components** - Flexible `Tabs`, `TabList`, `Tab`, and `TabPanel` composition pattern
+- **TypeScript** - Full type safety with exported interfaces
+- **Responsive** - Supports horizontal and vertical orientations
+- **Customizable** - CSS variables for easy theming
 
-```sh
-# create a new project
-npx sv create my-app
+## Installation
+
+```bash
+pnpm install
 ```
 
-To recreate this project with the same configuration:
+## Usage
 
-```sh
-# recreate this project
-pnpm dlx sv create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:auto" devtools-json mcp="ide:vscode+setup:local" --install pnpm sv-tabs
+```svelte
+<script lang="ts">
+	import { Tabs, TabList, Tab, TabPanel } from '$lib/components/tabs';
+</script>
+
+<Tabs defaultTab="overview" orientation="horizontal">
+	<TabList>
+		<Tab id="overview">Overview</Tab>
+		<Tab id="features">Features</Tab>
+		<Tab id="pricing">Pricing</Tab>
+		<Tab id="faq" disabled>FAQ</Tab>
+	</TabList>
+
+	<TabPanel id="overview">
+		<p>Overview content here...</p>
+	</TabPanel>
+
+	<TabPanel id="features">
+		<p>Features content here...</p>
+	</TabPanel>
+
+	<TabPanel id="pricing">
+		<p>Pricing content here...</p>
+	</TabPanel>
+
+	<TabPanel id="faq">
+		<p>FAQ content here...</p>
+	</TabPanel>
+</Tabs>
 ```
 
-## Developing
+## Svelte 5 Context API
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+This component demonstrates the **Svelte 5 Context API** pattern for sharing state between compound components:
 
-```sh
-npm run dev
+### Creating Context
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```typescript
+// tabs-context.svelte.ts
+import { setContext, getContext } from 'svelte';
+
+const TABS_KEY = Symbol('tabs');
+
+export function createTabsContext(options: TabsOptions): TabsContext {
+	// Reactive state using $state rune
+	let tabIds = $state<string[]>([]);
+	let activeTabId = $state(options.defaultTab ?? '');
+
+	// Derived state using $derived rune
+	const orientation = $derived(options.orientation ?? 'horizontal');
+
+	const context: TabsContext = {
+		get activeTabId() {
+			return activeTabId;
+		},
+		get orientation() {
+			return orientation;
+		},
+		get tabIds() {
+			return tabIds;
+		},
+
+		registerTab(id: string) {
+			tabIds = [...tabIds, id];
+			if (!activeTabId) activeTabId = id;
+		},
+
+		setActiveTab(id: string) {
+			activeTabId = id;
+			options.onTabChange?.(id);
+		},
+
+		isActive(id: string) {
+			return activeTabId === id;
+		}
+	};
+
+	setContext(TABS_KEY, context);
+	return context;
+}
+
+export function getTabsContext(): TabsContext {
+	return getContext<TabsContext>(TABS_KEY);
+}
 ```
 
-## Building
+### Using Context in Child Components
 
-To create a production version of your app:
+```svelte
+<!-- Tab.svelte -->
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { getTabsContext } from './tabs-context.svelte';
 
-```sh
-npm run build
+	let { id, children }: Props = $props();
+
+	const tabs = getTabsContext();
+
+	// Reactive derived state
+	let isActive = $derived(tabs.isActive(id));
+
+	onMount(() => {
+		tabs.registerTab(id);
+		return () => tabs.unregisterTab(id);
+	});
+</script>
+
+<button role="tab" aria-selected={isActive} onclick={() => tabs.setActiveTab(id)}>
+	{@render children()}
+</button>
 ```
 
-You can preview the production build with `npm run preview`.
+## API Reference
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+### `<Tabs>`
+
+| Prop          | Type                         | Default        | Description                      |
+| ------------- | ---------------------------- | -------------- | -------------------------------- |
+| `defaultTab`  | `string`                     | -              | ID of the initially active tab   |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Tab layout orientation           |
+| `onTabChange` | `(tabId: string) => void`    | -              | Callback when active tab changes |
+| `class`       | `string`                     | `''`           | Additional CSS class             |
+
+### `<TabList>`
+
+| Prop    | Type     | Default | Description          |
+| ------- | -------- | ------- | -------------------- |
+| `class` | `string` | `''`    | Additional CSS class |
+
+### `<Tab>`
+
+| Prop       | Type      | Default      | Description             |
+| ---------- | --------- | ------------ | ----------------------- |
+| `id`       | `string`  | **required** | Unique tab identifier   |
+| `disabled` | `boolean` | `false`      | Whether tab is disabled |
+| `class`    | `string`  | `''`         | Additional CSS class    |
+
+### `<TabPanel>`
+
+| Prop    | Type     | Default      | Description                  |
+| ------- | -------- | ------------ | ---------------------------- |
+| `id`    | `string` | **required** | Must match associated Tab id |
+| `class` | `string` | `''`         | Additional CSS class         |
+
+## Keyboard Navigation
+
+| Key               | Action                      |
+| ----------------- | --------------------------- |
+| `Tab`             | Move focus to/from tab list |
+| `←` / `→`         | Navigate tabs (horizontal)  |
+| `↑` / `↓`         | Navigate tabs (vertical)    |
+| `Home`            | Jump to first tab           |
+| `End`             | Jump to last tab            |
+| `Enter` / `Space` | Activate focused tab        |
+
+## Development
+
+```bash
+# Start dev server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Preview production build
+pnpm preview
+```
+
+## License
+
+MIT
