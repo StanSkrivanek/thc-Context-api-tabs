@@ -142,9 +142,9 @@ function handleClick() &#123;
 				</div>
 			</div>
 
+			<h2>Key Benefits of Svelte 5 Context API</h2>
 			<div class="benefits">
-				<h3>Key Benefits of Svelte 5 Context API</h3>
-				<ul>
+				<ul class="benefits-list">
 					<li><strong>Type Safety:</strong> Full TypeScript support with proper interfaces</li>
 					<li><strong>Reactive:</strong> Automatic updates when context state changes</li>
 					<li>
@@ -221,6 +221,7 @@ function handleClick() &#123;
 	.feature-header {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 0.75rem;
 		margin-bottom: 1rem;
 		color: orangered;
@@ -232,10 +233,6 @@ function handleClick() &#123;
 		transition: transform 0.3s ease;
 		stroke: orangered;
 	}
-
-	/* .feature:hover .feature-header :global(svg) {
-		transform: scale(1.1);
-	} */
 
 	.feature h3 {
 		font-size: 1.25rem;
@@ -295,7 +292,7 @@ function handleClick() &#123;
 		font-size: 2rem;
 		font-weight: 600;
 		margin-bottom: 1rem;
-		color: var(--color-foreground);
+		color: orangered;
 	}
 
 	.technical-details > p {
@@ -348,13 +345,6 @@ function handleClick() &#123;
 		padding: 2rem;
 		border-radius: 0.5rem;
 		border: 1px solid var(--color-border);
-	}
-
-	.benefits h3 {
-		font-size: 1.25rem;
-		font-weight: 600;
-		margin-bottom: 1rem;
-		color: var(--color-foreground);
 	}
 
 	.benefits ul {

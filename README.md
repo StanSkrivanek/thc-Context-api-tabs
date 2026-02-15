@@ -188,6 +188,19 @@ pnpm build
 pnpm preview
 ```
 
+## Acknowledgments
+
+- Built as a companion demo for **The Hackpile Chronicles** article on Svelte 5's Context API
+- Thanks to the Svelte for their excellent tools and documentation
+
 ## License
 
-MIT
+This is a demonstration project for educational purposes.
+
+## Contributing
+
+This is a demo project, but feel free to fork and customize for your needs!
+
+---
+
+**Built with** ❤️ **using Svelte 5 and SvelteKit **
